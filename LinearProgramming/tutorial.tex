@@ -1,0 +1,304 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Xiong　Yiliang
+% Email: wlxiong@gmail.com
+% Update: December 28, 2008
+% Institution: Southwest
+%       Jiaotong University
+% Title: Short Notes on 
+% 			Linear Programming
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper,12pt]{article}
+\usepackage{CJK}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{paralist}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{mflogo}
+\usepackage{psfrag}
+\usepackage[small]{caption}
+
+% Page margins
+\geometry{textheight=10in, textwidth=7in}
+
+% Using CJK package
+\begin{CJK*}{UTF8}{gbsn}
+% Redefine names
+\renewcommand{\figurename}{图}
+\renewcommand{\refname}{参考文献}
+\renewcommand{\abstractname}{说明}
+\end{CJK*}
+
+% Caption width
+%\setlength{\captionwidth}{\linewidth}
+
+
+\begin{document}
+% Using CJK package
+\begin{CJK*}{UTF8}{gbsn}
+
+\theoremstyle{definition}
+\newtheorem{thm}{定理}
+\newtheorem{cor}{推论}
+\newtheorem{define}{定义}
+
+\title{线性规划的直观理解}
+\author{熊一梁\\wlxiong@gmail.com\\西南交通大学交通运输学院}
+\date{2008年12月28日}
+
+\maketitle
+
+\abstract{
+这个笔记主要帮助我自己记忆线性规划中的一些定理和例题. 
+它的内容比较简单, 不涉及严格的证明, 只是注重直观的解释. 
+主要内容有: 单纯形算法, 线性规划理论, 对偶理论, 
+以及一些典型的例题. 希望这些东西能对考研的同学有一些帮助. 
+}
+
+% \section{凸集和凸函数}
+% 如果不关心证明的话, 这个部分完全可以跳过去. 这里写出来只是
+% 为了保证笔记的完整性. 
+
+% \begin{definition}
+
+% \end{definition}
+
+\section{单纯形算法}
+这里先叙述单纯形算法, 线性规划的理论留在后面讲. 
+
+\subsection{线性规划的标准形式}
+
+教材\cite{or}在第一章第一节就给出了线性规划的标准型形式~
+\footnote{在这个笔记中, 矩阵一般用大写字母表示, 向量用
+小写字母表示, 但是它们的字体都不加粗. 标量一般以带脚码的
+小写字母的形式出现. }
+\begin{align}
+\max~&c^{T} x\\
+s.t.~&Ax = b, \\
+~&x \geq 0.
+\end{align}
+它是通过添加松驰变量得到的, 但是我们不禁要问为什么要写成
+这种等式形式呢? 这个问题对理解单纯形算法的原理十分重要. 
+在单纯形算法中, 我们从一个基解迭代到下一个基解时使用的恰是
+线性代数中的~Gauss-Jordan~消元法~\footnote{我们在后面会对
+~Gauss-Jordan~消元方法在线性规划中的意义做深入的解释}. 
+这种变换只能用在等式组中, 如果用在不等式组上, 
+原不等式组的解集就会被改变. 就如下面的例子所示
+\begin{eqnarray}
+\left\{ \begin{aligned}
+x_{1} &\geq 0\\
+x_{2} &\geq 0
+\end{aligned} \right. \label{first}\\
+\left\{ \begin{aligned}
+x_{1} &\geq 0\\
+x_{1} + x_{2} &\geq 0
+\end{aligned} \right. \label{second}
+\end{eqnarray}
+变换后的不等式组(\ref{second})的解集比原不等式组(\ref{first})的
+解集范围更大. 所以在单纯形算法只能用在标准形式的线性规划上, 
+人们需要通过添加松驰变量将一般的线性规划问题转变为标准形式. 
+
+我们对上面的标准形式提出两个假设: 
+\begin{compactenum}[(1)]
+\item 方程组$Ax = b$至少有一个解; 
+\item 矩阵$A$的每一行都是线性独立的. 
+\end{compactenum}
+这样的假设是合理的, 因为如果方程组$Ax = b$无解, 那么它对应的
+线性规划问题也就无解. 如果矩阵$A$的各行线性相关, 那么总有
+某一行可以通过其它行的线性组合得到, 从而消去该行. 我们假设
+矩阵$A$有$m$行线性独立, 那么矩阵$A$的秩为$m$. 
+
+下面介绍一种针对无约束变量的转换技巧. 
+假设我们已经对一个线性规划问题做了如下转换: 
+\begin{compactenum}[(1)]
+\item 目标函数写作最大化的形式; 
+\item 对决策变量$x_{i}$的上下界约束都转化成非负约束; 
+\item 添加松驰变量, 使所有的不等式约束变作等式约束. 
+\end{compactenum}
+一般的教材上都有上述步骤的详细解释. 如下例所示
+\begin{equation}
+\begin{aligned}
+	&\min~-x_{1} - x_{2} - x_{3} \\
+	s.t.~&\left\{ \begin{aligned}
+	x_{1} + x_{3} &\leq 5\\
+	x_{2} + x_{3} &\leq 10\\
+	x_{1} + 2 x_{2} + x_{3} &\leq 20\\
+	0 \leq x_{1} &\leq 2\\
+	x_{2} \geq 0, x_{3} &\in R
+	\end{aligned}\right.
+\end{aligned}
+~\Longrightarrow~
+\begin{aligned}
+	&\max~x_{1} + x_{2} + x_{3} \\
+	s.t.~&\left\{ \begin{aligned}
+	x_{1} + x_{3} + s_{1}&= 5\\
+	x_{2} + x_{3} + s_{2}&= 10\\
+	x_{1} + 2 x_{2} + x_{3} + s_{3}&= 20\\
+	x_{1} + s_{4} &= 2\\
+	x_{1} \geq 0, x_{2} \geq 0, x_{3} &\in R\\
+	s_{1}, s_{2}, s_{3}, s_{4} &\geq 0
+	\end{aligned}\right.
+\end{aligned}
+\label{stdform}
+\end{equation}
+
+到这里我们只剩下一种情况没有考虑: 无约束的决策变量$x_{3} \in R$. 
+在前面三个步骤中, 我们已经将这个线性规划的所有约束转变为等式, 
+现在我们有机会将无约束的决策变量$x_{3}$消去, 并且减少一个约束条件. 
+这里我们将$x_{1} + x_{3} + s_{1}= 5$代入其他等式, 
+于是原线性规划简化为
+\begin{equation}
+\begin{aligned}
+	&\max~x_{1} + x_{2} + x_{3} \\
+	s.t.~&\left\{ \begin{aligned}
+	x_{2} - x_{1} + s_{2} - s_{1}&= 5\\
+	2 x_{2} + s_{3} - s_{1}&= 15\\
+	x_{1} + s_{4} &= 2\\
+	x_{1} \geq 0, x_{2} &\geq 0\\
+	s_{1}, s_{2}, s_{3}, s_{4} &\geq 0
+	\end{aligned}\right.
+\end{aligned}
+\label{eliminate}
+\end{equation}
+消元后的线性规划(\ref{eliminate})比原问题(\ref{stdform})减少了一个变量
+和一个约束条件. 接下来我们可以按照普通的单纯形算法求解上述问题, 
+将得到的解代入$x_{1} + x_{3} + s_{1}= 5$中, 从而得到$x_{3}$的值. 
+由于$x_{3}$是无约束的变量, 所以这样做总是可行的. 
+
+\subsection{新的单纯形表格}
+在进一步论述之前, 我们需要提前知道一些理论的东西. 
+
+\begin{define}
+\textbf{可行解} (feasible solution): 满足所有约束条件的决策变量$x$
+即是可行解. 
+\end{define}
+
+给定子集$B \subseteq \{1, 2, \dots, n\}$, 我们定义矩阵$A_{B}$是由
+$A$中脚码属于集合$B$的列组成的方阵, 如
+\begin{equation}
+A = \begin{pmatrix}
+1 & 5 & 3 & 4 & 6\\
+0 & 1 & 3 & 5 & 6
+\end{pmatrix},~
+B = \{2, 4\},~A_{B} = \begin{pmatrix}
+5 & 4\\
+1 & 5
+\end{pmatrix}
+\label{bmatrix}. 
+\end{equation}
+\begin{define}
+在标准形式的线性规划问题$\max~c^{T} x~s.t.~Ax = b, ~x \geq 0$中, 
+系数矩阵$A$是一个$m$行, $n$列的矩阵, 它的秩为$m$. 对任意的
+$x \in R^{n}$, 如果存在$m$元集合$B \subseteq \{1, 2, \dots, n\}$
+使得方阵$A_{B}$是可逆矩阵, 并且满足条件: (1) $x_{B} = B^{-1} b;$
+(2) $x_{j} = 0,~\forall~j \notin B. $ 那么$x$就是原问题的一个\textbf{基解} 
+(basic solution). 
+\end{define}
+例如$x = (0, 2, 0, 1, 0)$就是式子(\ref{bmatrix})对应的基解. 
+\begin{define}
+\textbf{基可行解} (basic feasible solution): 满足所有非负约束的基解. 
+\end{define}
+例如教材\cite{or}第10页的图1-2中的点$Q_{1}, Q_{2}, Q_{3}$是基可行解, 
+但点(4, 3)仅仅是基解. 
+\begin{define}
+\textbf{最优解} (optimal solution): 使目标函数最大的可行解, 并且它必定是
+一个基可行解(线性规划的本质特点).	
+\end{define}
+
+\begin{thm}
+对于标准形式的线性规划问题$\max~c^{T} x~s.t.~Ax = b, ~x \geq 0$, 
+\begin{compactenum}[(1)]
+\item 如果该线性规划存在可行解, 并且目标函数有上界, 那么必定存在最优解. 
+\item 如果最优解存在, 那么存在一个基可行解使目标函数取最大值. 
+\end{compactenum}
+\end{thm}
+
+教材\cite{or}第一章第四节中的4.1小节给的系数矩阵是关键性的. 
+我们现在要对这些矩阵做出详细的解释. 首先将线性规划问题写作表格的形式
+\begin{center}
+\begin{tabular}{c c c c|c}
+\hline
+$x_{1}$ & \dots & $x_{N}$ & $-z$ &  \\
+\hline
+$a_{11}$ & \dots & $a_{1N}$ & 0 & $b_{1}$\\
+\vdots  & $\ddots$ & \vdots  & \vdots & \vdots \\
+$a_{M1}$ & \dots & $a_{MN}$ & 0 & $b_{M}$\\
+\hline
+$c_{1}$ & \dots & $c_{N}$ & 1 &  $\alpha$\\
+\hline
+\end{tabular}
+\end{center}
+上面的表格和教材\cite{or}中提到的增广矩阵是相似的. 读者马上会看到
+表格的最后一行实际上是要用来计算检验数的. 我们通过一个算例来解释
+这种新的单纯形表格. 
+\begin{center}
+\begin{tabular}{r r r r r r|r}
+\hline
+$x_{1}$ & $x_{2}$ & $x_{3}$ & $x_{4}$ & $x_{5}$ & $-z$ &  \\
+\hline
+1 & -1 & 0 & 1 & 1 & 0 & 10\\
+1 &  1 & 0 & 1 & 1 & 0 & 10\\
+2 & -1 & 1 & 1 & -2 & 0 & -5\\
+1 & 2 & 3 & 1 & -1 & 0 & 8\\
+\hline
+3 & 4 & -5 & -2 & 4 & 1 & 100\\
+\hline
+\end{tabular}\\
+$x_{j} \geq 0~\forall~j, \min z$
+\end{center}
+我们来见检验$(x_{1}, x_{2}, x_{3})$是否是该问题的一个基解. 
+我们只需要在上述表格中进行~Gauss-John~消元, 将系数矩阵的
+前三列变换为单位矩阵, 最终我们得到
+\begin{center}
+\begin{tabular}{r r r r r r r|r}
+\hline
+ & $x_{1}$ & $x_{2}$ & $x_{3}$ & $x_{4}$ & $x_{5}$ & $-z$ &  \\
+\hline
+$x_{1}$ & 1 &  0 & 1 & 0  & -3 & 0 & -15\\
+$x_{2}$ & 0 &  1 & 1 & -1 & -4 & 0 & -25\\
+			& 0 &  0 & 0 & 1  & 10 & 0 & 23\\
+\hline
+			& 0 &  0 & -12 & 2 & 29 & 1 & 105\\
+\hline
+\end{tabular}
+\end{center}
+上面系数矩阵前三列的秩为$2$, 所以$(x_{1}, x_{2}, x_{3})$不是
+基解. 
+
+\section{线性规划理论}
+
+\section{对偶理论}
+
+
+
+
+
+
+
+\begin{thebibliography}{5}
+
+\bibitem{uselp} Jiri Matousek, Bernd Gartner. 
+\emph{Understanding and Using Linear Programming}. 
+Springer-Verlag, Berlin Heidelberg 2007. 
+
+\bibitem{example} Katta G. Murty. 
+\emph{Optimization Models For Decision Making: Volume 1 (Lecuture Notes)}. 
+University of Michigan, Ann Arbor 2003. 
+
+\bibitem{linopt}Dimitris Bertsimas, John N. Tsitsiklis. 
+\emph{Introduction to Linear Optimization}. 
+Athena Scientific, Belmont, Massachusetts 1997. 
+
+\bibitem{exam} 李宗平, 寇玮华. 
+西南交通大学交通运输学院研究生入学考试试卷~1997--2008. 
+
+\bibitem{or} 教材编写组. 
+运筹学~(第三版). 清华大学出版社, 北京~2005. 
+
+\end{thebibliography}
+
+\end{CJK*}
+\end{document}

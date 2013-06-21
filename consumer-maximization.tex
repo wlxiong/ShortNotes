@@ -1,0 +1,240 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Xiong Yiliang
+% Email: wlxiong@gmail.com
+% Update: December 16, 2010
+% Institution: Hong Kong Polytechnic University
+% Title: Note on consumer’s maximization problem
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath}	% just math
+\usepackage{amssymb}	% allow blackboard bold (aka N,R,Q sets)
+\usepackage{amsthm}	% allow blackboard bold (aka N,R,Q sets)
+\linespread{1.2}	% double spaces lines
+
+%% page layout 
+\textwidth 6.5truein  % These 4 commands define more efficient margins
+\textheight 9.5truein
+\oddsidemargin 0.0in
+\topmargin -0.6in
+
+\parindent 0pt	% let's not indent paragraphs
+\parskip 5pt  % Also, a bit of space between paragraphs
+
+%% bibliography
+\usepackage{bibentry}
+
+%%% MATH ENVIRONMENT
+\usepackage{amsmath}
+\usepackage{amsthm}
+\theoremstyle{plain}% default
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem*{cor}{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem{exmp}{Example}[section]
+\newtheorem{prob}[exmp]{Problem}
+\theoremstyle{remark}
+\newtheorem*{rem}{Remark}
+\newtheorem*{note}{Note}
+
+% I write partial derivatives a lot, it's useful to make a new command:
+\newcommand{\partfrac}[2]{\frac{\partial #1}{\partial #2}}
+% Then, writing a partial is as simple as $\partfrac{J}{x}$.
+% A one-line partial derivative command: 
+\newcommand{\partline}[2]{\partial #1 \left/ \partial #2 \right.}
+
+% Smilarily, the commands for derivative is: 
+\newcommand{\devfrac}[2]{\frac{d #1}{d #2}}
+\newcommand{\devline}[2]{d #1 \left/ d #2 \right.}
+
+\begin{document}
+\begin{flushright}
+\linespread{1}	% single spaces lines
+\small \normalsize %% dumb, but have to do this for the prev to work
+Yiliang Xiong \\
+\today
+\end{flushright}
+
+%% The context begins here. 
+
+\begin{rem}
+Note on consumer's maximization problem: excerpted from \bibentry{small:1981}
+\end{rem}
+
+Suppose that a consumer has a \emph{twice differentiable}, \emph{strictly quasi-concave} 
+utility function $u$ defined over the commodities $x_n$ and $x_1$, where $x_n$ is taken to 
+be the \emph{numeraire}. The two good case is chosen for convenience; the results generalize 
+easily to an arbitrary number of commodities. The consumer maximizes (\emph{direct utility
+function}): 
+\begin{equation}\label{util}
+	u = u(x_n, x_1)	
+\end{equation}
+subject to the budget and nonnegative constraints 
+\begin{align} 
+	\label{budget}
+	x_n + p_1 x_1 &= y, \\
+	x_j \geq 0, j &= n,1,	
+\end{align}
+where $p_1$ is the price of good $1$, and $y$ is income. 
+
+Maximization of (\ref{util}) subject to (\ref{budget}) yields the \emph{ordinary demand functions} 
+(\emph{Marshallian demand})
+\begin{equation} \label{demand}
+	x_j = x_j(p_1, y), j = n,1. 
+\end{equation}
+
+We assume that an interior solution ($x_j>0$) with respect to both goods. Substituting 
+(\ref{demand}) into (\ref{util}) we define the consumer's \emph{indirect utility function} 
+\begin{equation} \label{indirect_util}
+	v(p_1, y) = u(x_n(p_1,y), x_1(p_1,y))
+\end{equation}
+which is known to satisfy \emph{Roy's Identity}: 
+\begin{equation} \label{roy}
+	-\frac{\partial v \left/ \partial p_1 \right. }%
+		  {\partial v \left/ \partial y \right. } = x_1
+\end{equation}
+
+\begin{note}
+	Roy's Identity follows from comparing the total differentials of (\ref{budget}) 
+	and (\ref{indirect_util}) and using the first-order maximum conditions of the consumer's 
+	maximum problem (\ref{util}) and (\ref{budget}).
+\end{note}
+
+\begin{proof}\label{pf:roy}
+	First we apply the chain rule to (\ref{indirect_util}) to derive its total differential: 
+	\begin{align} 
+		\label{total_dev_p}
+		\partfrac{v}{p_1} &= \partfrac{u}{x_n} \cdot \partfrac{x_n}{p_1} + 
+							 \partfrac{u}{x_1} \cdot \partfrac{x_1}{p_1} \\
+		\label{total_dev_y}
+		\partfrac{v}{y} &= \partfrac{u}{x_n} \cdot \partfrac{x_n}{y} + 
+						   \partfrac{u}{x_1} \cdot \partfrac{x_1}{y} 
+	\end{align}
+	
+	The Lagrangian function of the consumer's maximum problem is: 
+	\begin{equation} \label{Lagrangian}
+		L = u + \lambda (y - x_n - p_1 x_1)
+	\end{equation}
+	The first-order condition is: 
+	\begin{align} \label{first_order}
+		\partfrac{L}{x_1} &= \partfrac{u}{x_1} - \lambda p_1 = 0 \\
+		\partfrac{L}{x_n} &= \partfrac{u}{x_n} - \lambda = 0 
+	\end{align}
+	
+	Substitute (\ref{first_order}) into (\ref{total_dev_p}) and (\ref{total_dev_y}): 
+	\begin{align} 
+		\label{total_dev_p_opt}
+		\partfrac{v}{p_1} &= \lambda \cdot \partfrac{x_n}{p_1} + 
+							 \lambda p_1 \cdot \partfrac{x_1}{p_1} \\
+		\label{total_dev_y_opt}
+		\partfrac{v}{y} &= \lambda \cdot \partfrac{x_n}{y} + 
+						   \lambda p_1 \cdot \partfrac{x_1}{y}
+	\end{align}
+	Then we have, 
+	\begin{equation} 
+		\label{roy_frac}
+		\frac{\partline{v}{p_1}}{\partline{v}{y}} = 
+		\frac{\partline{x_n}{p_1} + p_1 \cdot \partline{x_1}{p_1}}%
+			 {\partline{x_n}{y} + p_1 \cdot \partline{x_1}{y}}. 
+	\end{equation}
+	
+	To further simplify (\ref{roy_frac}), use the total differential of (\ref{budget}): 
+	\begin{align}
+		\label{total_dev_budget_p}
+		\partfrac{x_n}{p_1} + x_1 + p_1 \cdot \partfrac{x_1}{p_1} &= 0 \\
+		\label{total_dev_budget_y}
+		\partfrac{x_n}{y} + p_1 \cdot \partfrac{x_1}{y} &= 1
+	\end{align}
+	Substitute (\ref{total_dev_budget_p}) and (\ref{total_dev_budget_y}) into (\ref{roy_frac}), 
+	\begin{equation}
+		\frac{\partline{v}{p_1}}{\partline{v}{y}} = -x_1
+	\end{equation}
+	Roy's Identity is obtained. 
+\end{proof}
+
+Provided that the direct utility function is \emph{strictly increasing} in $x_n$ and is 
+\emph{nondecreasing} in $x_1$, $v$ is \emph{monotonic increasing} in $y$ and can 
+therefore be inverted to yield the \emph{expenditure function} 
+\begin{equation} \label{expend}
+	y = e(p_1, u). 
+\end{equation}
+
+The function $e$ therefore indicates how much income is required to achieve the utility level 
+$u$ when the price of good $1$ is $p_1$; it satisfies 
+\begin{equation} \label{util_identity}
+	u = v(p_1, e(p_1,u)). 
+\end{equation}
+
+Now suppose that the price of the first good changes from $p_1^0$ to $p_1^f$. By definition, 
+the compensating variation associated with the price change is 
+\begin{equation} \label{delta_e}
+	\Delta e = e(p_1^f, u^0) - e(p_1^0, u^0). 
+\end{equation}
+
+This expression shows the amount of income the consumer must be given to make him as well off 
+at price $p_1^f$ as at $p_1^0$. 
+
+The problem now is to express (\ref{delta_e}) in terms of the \emph{compensated demand function} 
+(\emph{Hicksian demand}) for $x_1$, which is defined by 
+\begin{equation} \label{compensated_demand}
+	x_1^c (p_1, u) = x_1 (p_1, e(p_1, u)). 
+\end{equation}
+
+This is done by applying \emph{Shephard's Lemma}: 
+\begin{equation} \label{shephard}
+	\frac{\partial e(p_1, u)}%
+		 {\partial p_1} = x_1^c (p_1, u), 
+\end{equation}
+where $u$ is an arbitrary selected utility level. 
+
+\begin{note}
+	Shephard's Lemma follows from differentiating (\ref{util_identity}) with respect to $p_1$, 
+	and applying Roy's Identity. 
+\end{note}
+
+\begin{proof}\label{pf:shephard}
+	For given utility $u$, differentiate (\ref{util_identity}) with respect to $p_1$: 
+	\begin{equation}
+		\partfrac{u}{p_1} = \partfrac{v}{p_1} + \partfrac{v}{y} \cdot \partfrac{e}{p_1}
+	\end{equation}
+	Since $u$ is fixed, thus we have $\partfrac{u}{p_1} = 0$. Rearrange the above equation: 
+	\begin{equation}
+		\label{expned_part_p}
+		\partfrac{e}{p_1} = -\frac{\partline{v}{p_1}}{\partline{v}{y}} 
+	\end{equation}
+	Applying Roy's Identity (\ref{roy}) to (\ref{expned_part_p}): 
+	\begin{equation}
+		\partfrac{e}{p_1} = x_1
+	\end{equation}
+	Shephard's Lemma is proved. 
+\end{proof}
+
+The equation (\ref{shephard}) gives the compensating variation for an infinitesimal change 
+in $p_1$; to find the compensating variation for a finite change, 
+(\ref{shephard}) is integrated: 
+\begin{equation} \label{e_difference}
+	e(p_1^f, u^0) - e(p_1^0, u^0) = 
+		\int_{p_1^0}^{p_1^f} x_1^c (p_1, u^0) d p_1. 
+\end{equation}
+
+This gives the basic result mentioned at the start of this section; the compensating variation 
+of a price change is the area to the left of the compensated demand curve. 
+
+\begin{rem}
+	Measuring price-induced \emph{utility changes} as areas to the left of the appropriate 
+	compensated demand curves. 
+\end{rem}
+
+% add QED symbol abbreviation
+% -->ab qed. \hfill$\square$ 
+
+\bibliographystyle{plain}
+\nobibliography{/Users/xiongyiliang/Documents/BibDesk/classics.bib}
+
+\end{document}

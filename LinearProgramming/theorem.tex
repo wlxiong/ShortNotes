@@ -1,0 +1,631 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Xiong　Yiliang
+% Email: wlxiong@gmail.com
+% Update: October 11, 2010
+% Institution: Hong Kong Polytechnic University
+% Title: Definitions and Theorems in Linear Programming
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margins=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+%%% MATH ENVIRONMENT
+\usepackage{amsmath}
+\usepackage{amsthm}
+\theoremstyle{plain}% default
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem*{cor}{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem{exmp}{Example}[section]
+\newtheorem{prob}[exmp]{Problem}
+\theoremstyle{remark}
+\newtheorem*{rem}{Remark}
+\newtheorem*{note}{Note}
+
+\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{Definitions and Theorems in Linear Programming}
+\author{Xiong Yiliang}
+\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+\section{The Basics}
+
+\subsection{Two special forms of linear programs}
+
+Let us look at two special forms of linear programs. 
+
+\begin{itemize}
+\item[(I) Standard form] 
+\begin{align*}
+\min c^T x \\
+\text{s.t. } Ax = b\\
+x \geq 0
+\end{align*}
+in which every variable is sign-constrained and only equality constraints are allowed. 
+\item[(II) Canonical form]
+\begin{align*}
+\min c^T x\\
+\text{s.t. } Ax \geq b\\
+x \geq 0
+\end{align*}
+a form which allows only inequality constraints and in which all variables are
+sign-constrained. 
+\end{itemize}
+
+\subsection{Linear algebra and geometry}
+\textbf{Conventions}. The $j$th column of an array $A$ (as a column vector) will 
+be denoted $A_j$; ite $i$th row, as a \emph{row vector}, will be denoted $A^i$
+
+A \emph{vector space} of \emph{linear space} $S$ (in $R^n$) is a nonempty 
+subset of $R^n$ closed under vector addition and scalar multiplication. Vectors 
+$v_1, v_2, \cdots, v_r$ are \emph{linear independent} if and only if whenever
+$\sum c_i v_i = 0$ and $c_i \in R$, then $c_i = 0$ for all $i$. Vectors that are
+not linearly independent are \emph{linearly dependent}. The dimension $dim(S)$ 
+of a linear space $S$ is the maximum number of linearly independent vectors in $S$. 
+
+An \emph{affine space} (in $R^n$) is the translate of a linear space. Formally, 
+$A \subset R^n$ is an affine space if and only if $A = \{ t + y \mid y \in S \}$ 
+for a fixed $n$-vector $t$ and linear space $S$. The dimension of $A$ is defined 
+to be $dim(s)$. By extension, if $B$ is an arbitrary subset of $R^n$, $dim(S)$ 
+is defined to be the smallest dimension of any affine space containing $B$. 
+
+If $A$ is an $m\times n$ matrix, we define 
+$$\text{column space} (A) = \{ Ax \mid x \in R^n\}, $$
+and 
+$$ rank(A) = dim(\text{column space} (A)). $$
+
+We say that $A$ has \emph{full rank} if $rank(A)$ is its smaller dimension. 
+$nullspace(S)$ is the vector space $\{ x \mid Ax = 0 \}$ and the \emph{nullity} 
+of $A$ is the dimension of $nullspace(A)$. 
+
+\begin{thm}
+$rank(A)$ is simultaneously the maximum number of linearly independent rows in $A$
+and the maximum number of linearly independent columns in $A$. 
+\end{thm}
+
+\begin{thm}
+$rank(A) + nullity(A) = n,$ if $A$ is $m\times n$.
+\end{thm}
+
+Where $W$ is a subset of $R^n$, let the \emph{orthogonal complement} 
+$W^{\perp}$ of $W$ be $\{ y \in R^n \mid y^T x = 0 \forall x \in W \}$, 
+the vector space of vectors perpendicular to $W$. 
+
+\begin{thm}
+Every $x \in R^n$ can be written uniquely as $x = x^W + x^{\perp}$, where 
+$x^W \in W$ and $x^{\perp} \in W^{\perp}$. 
+\end{thm}
+
+The vector $x^W$ is known as the \emph{projection} of $x$ onto $W$, while 
+$x^{\perp}$ is the $projection$ of $x$ onto $W^{\perp}$. 
+
+A set of $n$-vectors $u_1, u_2, \cdots, u_m$ is orthonormal if each has unit 
+length and distinct vectors have $0$ dot product. Alternatively, 
+$u_1, u_2, \cdots, u_m$ are orthonormal if and only if $u^T_k u_l = 0$ 
+if $k\neq l$ and $u^T_k u_k = 1$ for all $k$. A real square matrix $U$ is 
+\emph{orthogonal} if $UU^T = I$, i.e., its rows (and hence columns) are 
+orthonormal. 
+
+\begin{thm}
+If $A$ is real symmetric matrix, all of $A$'s eigenvalues are real. Furthermore, 
+if $A$'s eigenvalues are $\lambda_1, \lambda_2, \cdots, \lambda_n$, then 
+$$ A = U \Lambda U^{-1}, $$
+where $ \lambda = diag\{ \lambda_1, \lambda_2, \cdots, \lambda_n\}$ and
+$U$ is an orthogonal matrix whose $i$th column is the eigenvector of $A$ 
+corresponding to $\lambda_i$, normalized to have length one. 
+\end{thm}
+
+\begin{thm}
+Let $A$ be real symmetric. The following are equivalent. 
+\begin{itemize}
+\item $A$ is positive definite.
+\item All eigenvalues of $A$ are positive. 
+\item $A = QQ^T$ for a nonsingular $n\times n$ real matrix $Q$. 
+\end{itemize}
+\end{thm}
+
+\begin{dfn}
+A \emph{hyperplane} in $R^n$ is 
+$$ H = \{ x \mid a_1 x_1 + \cdots + a_n x_n = b \}, $$
+where not all $a_i = 0$. It is easy to verify that $dim(H) = n - 1$. 
+A \emph{halfspace} is the set $\{ x \mid a_1 x_1 + \cdots + a_n x_n \leq b \}$ 
+where not all $a_i = 0$. 
+\end{dfn}
+
+We say that a set $T \subset R^n$ is bounded if there is a real $r$ such that
+$\parallel x\parallel \leq r$ for all $x \in T$. 
+
+\begin{dfn}
+A \emph{polyhedron} is the intersection of finitely many halfspaces. A bounded 
+nonempty polyhedron is called a \emph{polytope}. 
+\end{dfn}
+
+\begin{exmp}
+The set $\{ x \mid Ax \geq b, x \geq 0\}$ is the intersection of finitely many halfspaces, 
+as is $\{ x \mid Ax = b, x\geq 0\}$. If they are nonempty and bounded, they are 
+polytopes. 
+\end{exmp}
+
+\subsection{Basic solutions}
+
+\begin{dfn}
+Suppose $x_1, x_2, \cdots, x_r \in R^n$, if $p = \sum^r_{i=1} \lambda_i x_i, \lambda_i \geq 0$ 
+and $\sum^r_{i=1} \lambda_i = 1$, then $p$ is the \emph{convex combination} 
+of $x$ and $y$. Point $p$ is the \emph{strict convex combination} of points
+$ x_1, x_2, \cdots, x_r$ if $p$ is the convex combination of $ x_1, x_2, \cdots, x_r$, 
+yet $p \neq x_i$ for all $i$. 
+\end{dfn}
+
+\begin{dfn}
+$S \subset R^n$ is \emph{convex} if whenever $x, y \in S$, $\lambda x + (1-\lambda)y \in S$ 
+for all $\lambda \in [0, 1]$. That is, the line segment between $x$ and $y$ lies in $S$. 
+\end{dfn}
+
+\begin{dfn}
+If $P$ is a polyhedron, $v \in P$ is an \emph{extreme point} or \emph{vertex} 
+if $v$ cannot be written as the strict convex combination of points $x, y \in P$. 
+\end{dfn}
+
+\begin{dfn}
+If $A$ is an $m\times n$ matrix of rank $m$, any $m$ linearly independent columns are a
+\emph{basis}. They form a basis of $A$'s column space, $R^n$. 
+\end{dfn}
+
+\textbf{Notation}. Let us use LPS to denote
+\begin{align*}
+\min c^T x\\
+\text{s.t. } Ax = b\\
+x \geq 0
+\end{align*}
+where $A$ is an $m\times n$ matrix of rank $m$. We use $F$ to denote the feasible set 
+$\{x \mid Ax = b, x \geq 0\}$. 
+
+\begin{thm}
+In LPS, suppose that $w\in R^n$. Then $w$ is a vertex of the feasible set $F$ if and only if
+$w$ is a basic feasible solution of the LPS instance. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{cor}
+There are only finitely many vertices. 
+\end{cor}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{dfn}
+If a basic feasible solution is \emph{degenerate} if it has more than $n-m$ zeros. 
+\end{dfn}
+
+\begin{thm}
+If two different bases correspond to a single basic feasible solution $v$, the $v$ is 
+degenerate. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{lem}
+Suppose $P = \{ x \in R^n \mid Ax \leq b \}$ is a polyhedron. Then $v$ is an extreme 
+point of $P$ if and only if there are $n$ linearly independent constraints among the 
+constraints $Ax \leq b$ that are tight at $v$. 
+\end{lem}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{thm}
+In LPS, suppose that $p\in F$. Then either the LPS instance is unbounded or there is 
+a vertex $v$ of $F$ satisfying $c^T v \leq c^T p$. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{cor}
+If in LPS $F = \emptyset$ and $c^T x \geq B$ for all $x \in F$, then there is an 
+optimal vertex. Provided that the cost is bounded below, linear programming is a finite
+problem! 
+\end{cor}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{thm}
+If $P = \{ x \in R^n \mid Ax \leq b \}$ is a polytope, the every $x \in P$ can be written 
+as a convex combination of at most $n+1$ vertices. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\subsection{The fundamental theorem of linear inequalities}
+
+\begin{thm}
+Let $a_1, \cdots, a_m, b \in R^n$ be a set of vectors. Then exactly one of 
+the two following alternatives occurs:
+\begin{itemize}
+\item[(I)] $\exists y \in R^m_+$ such that $b = \sum^m_i y_i a_i$. 
+\item[(II)] $\exists d \in R^n$ such that $d^Tb < 0$ and $d^Ta_i \geq 0$ for all 
+$(i = i, \cdots, m)$. 
+\end{itemize}
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\section{The Simplex Algorithm}
+
+\subsection{Pivoting}
+
+\begin{thm}
+Given ordered basis $B = B(1) , B(2), \cdots, B(m)$ and the basic feasible solution $x_0$
+corresponding to $B$ (whose $B(i)$th component is $x_{i0}$, $1 \leq i \leq m$, let $j \in B$. 
+Write $A_j = \sum_{i=1}^m x_{ij} A_{B(i)}$. Suppose $\{ i \mid x_{ij} > 0 \}$ is nonempty. 
+Let $\theta_0$ denote $\min_{i:x_{ij} > 0} \frac{x_{i0}}{x_{ij}}$ and suppose 
+$\theta_0 = \frac{x_{l0}}{x_{lj}}$ (with $x_{lj} > 0$). Let $ B'(i) = \left\{ 
+\begin{aligned}
+&B(i), &i \neq l\\
+&j, &i = l
+\end{aligned}
+\right. $. Then $B' = B'(1), B'(2), \cdots, B'(m)$ is a basis corresponding to the basic feasible 
+solution $x'_0$ whose $B'(i)$th component is $x_{i0} - \theta_0 x_{ij}$, if $i \neq l$, and whose 
+$j$th component is $\theta_0$. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\textbf{Potential Problems:}
+\begin{itemize}
+\item There might not be any $i$ such that  $x_{ij} > 0$. We can then choose any 
+$\theta_0 \geq 0$ and remain feasible. 
+\item $\theta_0$ may be $0$, in which case $x'_0 = x_0$ (but the ordered bases differ).
+A pivot with $\theta_0 = 0$ is called \emph{degenerate}. 
+\end{itemize}
+
+\begin{note}
+	The basic feasible solution $x_0$ has $n$ entries, of which at least $n-m$ are $0$. 
+	If there is a tie in the min operation that determines $\theta_0$, the new basic 
+	feasible solution is degenerate --- we get at least two $0$'s "at cost of one". 
+\end{note}
+
+\subsection{Tableaux}
+
+Pivoting, a piece of cake. But which nonbasic column $j$ should we bring into the basis? 
+The cost of a basic feasible solution $x_0$ with ordered basis $B(1), B(2), \cdots, B(m)$ is 
+$$ \sum_{i=1}^{m} c_{B(i)} x_{i0}. $$ 
+How will bringing column $j$ into the basic change the cost? We set
+$$ \theta_0 = \min_{i:x_{ij}>0} \frac{x_{i0}}{x_{ij}}$$
+(if the min operation is over a nonempty set) and choose $l$ such that
+$$ \theta_0 = \frac{x_{l0}}{x_{lj}}$$
+where $x_{lj}>0$. If column $j$ enters, $B(l)$ leaves. 
+$$ \text{new cost} = \sum_{i\neq l} c_{B(i)} [x_{i0} - \theta_0 x_{ij}] + c_j \theta_0$$
+(because $[x_{i0} - x_{ij}]$ will be the $B(i)$th entry of the new basic feasible solution, for 
+$i \neq l$, and its $j$th entry will be $\theta_0$). 
+\begin{align*}
+\text{old cost} &= \sum_{i\neq l} c_{B(i)} x_{i0} + c_{B(l)} x_{l0} \\
+&= \sum_{i\neq l} c_{B(i)} x_{i0} + \theta_0 c_{B(l)} x_{lj}, 
+\end{align*}
+since $x_{l0} = \frac{x_{l0}}{x_{lj}}\cdot x_{lj} = \theta_0 x_{lj}$. 
+So
+\begin{align*}
+[\text{new cost} - \text{old cost}] &= \theta_0 [c_j - \sum_{i\neq l} c_{B(i)} x_{ij} - c_{B(l)} x_{lj}]\\
+&= \theta_0 [c_j - \sum_i c_{B(i)} x_{ij}]. 
+\end{align*}
+To decrease the cost, we want $c_j - \sum_i c_{B(i)} x_{ij}$ to be negative. 
+
+Where $z$ is the $n$-vector satisfying $z_j = \sum_i c_{B(i)} x_{ij}$, let $\bar{c} = c - z$, 
+the $n$-vector of \emph{modified costs}. It is then profitable to bring $j$ into the basis if 
+$\bar{c}_j<0$ . In this case the cost increase by $\theta_0 \bar{c}_j<0$, which is nonpositive. 
+
+\begin{lem}
+Let $X$ be the tableau (without column $0$) after $s$ pivots, where $A$ was the original matrix. 
+Let columns $B(1), B(2), \cdots, B(m)$ be the current ordered basis where column $B(i)$ of $X$ 
+is $e_i$. Let $B$ denote the $m\times m$ matrix whose $i$th column is $A_{B(i)}$. 
+Then $X = B^{-1} A$. Furthermore, the $0$th column is exactly $B^{-1}b$. 
+\end{lem}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{thm}
+If $\bar{c} = c - z \geq 0$ at basic feasible solution $x_0$, then $x_0$ is optimal. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{thm}
+For all $i$, $\bar{c}_{b(i)} = 0$, i.e., the modified cost of a basic column is $0$. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{lem}
+The $(0,0)$ entry will be always hold the negative of the cost of the current basic 
+feasible solution, 
+$$ - \sum_{i=1}^m x_{i0} c_{B(i)}$$
+and the $(0,j)$ entry will always hold $\bar{c}_j$ (for $j \geq 1$), 
+$$ \bar{c}_j = c_j - \sum_{i=1}^m x_{ij} c_{B(i)}$$
+if whenever we pivot we perform a row operation so as to zero out the entry atop
+the entering column. 
+\end{lem}
+
+\begin{proof}
+
+\end{proof}
+
+Let us review pivoting. 
+\begin{enumerate}
+	\item Find a column $j$ whose row-$0$ entry is negative. 
+	\begin{itemize}
+		\item Find $j$ such that $c_j - \sum_i c_{B(i)} x_{ij}$ is negative. 
+		\item A greedy approach --- find the steepest decreasing direction: 
+			\[ j^* = \arg \min_j \{ c_j - \sum_i c_{B(i)} x_{ij} \} \]
+	\end{itemize}
+	\item Compute $\theta_0 = \min_{i:x_{ij}>0} \frac{x_{i0}}{x_{ij}}$. 
+	(Assume, for now, that some $x_{ij} > 0$.) 
+	\begin{itemize}
+		\item If $x_{ij} \leq 0$ for all $i$, then the LP is unbounded
+		(we can always move along the decreasing direction, 
+		and the objective goes to $-\infty$). 
+		\item Otherwise, there is a maximum step $\theta_0$. To maintain 
+		the feasibility, we cannot move any further than $\theta_0$. 
+	\end{itemize}
+	\item Find an $l$ such that $\theta_0 = \frac{x_{l0}}{x_{lj}}$ 
+	(amd $x_{lj} > 0$). 
+\end{enumerate}
+
+Combine the first two steps and make \emph{one big jump}. 
+\begin{itemize}
+	\item We can determine the entering column and leaving column simultaneously 
+	by solving a nested minimization problem: 
+	\begin{align*}
+	\Delta = 
+	\min_j \left\{ \left[ \min_{i:x_{ij}>0} \left\{ \frac{x_{i0}}{x_{ij}}\right\} \right]
+	\cdot \left[ c_j - \sum_i c_{B(i)} x_{ij}\right] \right\}. 
+	\end{align*}
+	\item Let $i^*$ and $j^*$ denote the solution of above problem. 
+	Now make a sequence of row operations to bring column $j^*$ into the basis 
+	and make $i^*$ leave the basis, then we decrease the objective by $\Delta$. 
+	\begin{itemize}
+		\item $\Delta$ is the maximum decrease we can achieve by moving to 
+		an adjacent vertex of $v_0$, where $v_0$ is the vertex corresponding to 
+		current basic solution $x_0$. 
+	\end{itemize}
+\end{itemize}
+
+\begin{thm}
+If $\bar{c}_j < 0$, and $x_{ij} \leq 0$ for all $i$, then the LPS instance is unbounded. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\textbf{Summary.} For a given linear program: 
+\begin{align*}
+\min c^T x\\
+\text{s.t. } Ax = b\\
+x \geq 0
+\end{align*}
+
+The initial tableau of the LP problem is: 
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+0 & $c$ \\
+\hline
+$b$ & $A$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Suppose $B$ is a basis and the tableau is then: 
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+-$c_B^T B^{-1} b$ & $c - c_B^T B^{-1} A$ \\
+\hline
+$B^{-1} b$ & $B^{-1} A$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Duality}
+
+\subsection{The Dual}
+The primal and dual problems: 
+\begin{center}
+\begin{tabular}{l|l l}
+ & Primal & Dual \\
+ \hline
+ & min $c^T x$ & max $y^T b$\\
+ row $i$ & $\sum_j a_{ij} x_j = b_i$ & $y_i \in R$\\
+ row $i$ & $\sum_j a_{ij} x_j \geq b_i$ & $y_i \geq R$\\
+ var $j$ & $x_j \in R$ & $\sum_i y_i a_{ij} = c_j$\\
+ var $j$ & $x_j \geq 0$ & $\sum_i y_i a_{ij} \leq c_j$\\
+\end{tabular}
+\end{center}
+
+\begin{thm}
+The dual of the dual is the primal. 
+\end{thm}
+
+\subsection{The Duality Theorem}
+
+\begin{thm}
+If $w, u$ is a primal/dual feasible pair, $ c^T w \geq u^T b$. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{thm}
+If a linear program has an optimal solution, so does its dual, and their optimal 
+costs are identical. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{cor}
+If we run Simplex on LPS, at termination $(B^{-1})^T c_B is$ a dual optimal solution
+(if an optimal point exists). 
+\end{cor}
+
+\begin{cor}
+Exactly one of these three cases occurs: 
+\begin{itemize}
+\item Primal and dual are both infeasible. 
+\item One is unbounded and the other is infeasible. 
+\item Both have optimal points. 
+\end{itemize}
+\end{cor}
+
+\begin{cor}
+Suppose that the leftmost $m$ columns of $A$ are an identity matrix. If we run Simplex
+on LPS and it terminates at an optimal point, at termination the $m$-vector $u^*$ given 
+by $u^*_i = c_i - \bar{c}_i$ is dual optimal. 
+\end{cor}
+
+\subsection{Complementary Slackness}
+
+\begin{thm}
+Let $P$ be a linear program in general form:
+\begin{align*}
+\min c^T x \\
+\text{s.t. } A^i x &= b_i, 1 \leq i \leq h \\
+A^i  x &\geq b_i, h+1 \leq i \leq m \\
+x_j &\geq 0, 1 \leq j \leq l \\
+x_j &\in R, l+1 \leq j \leq n. 
+\end{align*}
+Let its dual be $D$: 
+\begin{align*}
+\max b^T y \\
+\text{s.t. } A_j^T y &\leq c_j, 1 \leq j \leq l \\
+A_j^T y &= c_j, l+1 \leq j \leq n \\
+y_i &\in R, 1 \leq i \leq h \\
+y_i &\geq 0, h+1 \leq i \leq m
+\end{align*}
+Let $w$ be primal feasible and let $u$ be dual feasible. Then $w$ is primal optimal 
+and $u$ is dual optimal if and only if 
+$$ (A^i w - b_i) u = 0 \text{ for } i = 1, 2, \cdots, m$$
+and 
+$$ (A_j^T - c_j) w = 0 \text{ for } j = 1, 2, \cdots, n. $$
+\end{thm}
+
+\subsection{Farkas's Lemma}
+
+\begin{thm}
+$Ax \leq b$ has a solution if and only if there is no nonnegative vector $y$ satisfying 
+$A^T y = 0$ and $ b^T y < 0$. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\subsection{The Economic Interpretation of the Dual}
+
+\begin{thm}
+Consider a primal problem $P$: 
+\begin{align*}
+\min c^T x \\
+Ax = b \\
+x \geq 0
+\end{align*}
+Suppose that $P$ has at least one nondegenerate basic optimal solution. Then there is
+a unique $u^* \in R^m$ which is optimal in the dual of $P$. Furthermore, there is 
+a positive $\delta$ with the following property. 
+
+Suppose $t \in R^m$ and $\mid t_i \mid \leq \delta$ for all $i$. Then 
+\begin{align*}
+\min c^T x \\
+Ax &= b + t \\
+x &\geq 0
+\end{align*}
+has a optimal solution and its value is $C^* + (u^*)^T t$, where $C^*$ is the optimal 
+cost of $P$ and $u^*$ is dual optimal. 
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+
+\end{document}
